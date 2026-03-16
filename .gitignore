@@ -1,0 +1,28 @@
+# ---- environment ---- 
+.env
+.venv
+
+
+# app/db/__pycache__/
+# app/models/__pycache__/
+**/__pycache__/
+
+test/test_create.py
+# RemindMySelf.md
+output.txt
+
+
+# logs
+logs/*.log
+
+command.txt
+
+txt/
+.DS_Store
+
+send_to_gpt.txt
+
+
+# data
+docs-corpus/*
+data/*

@@ -1,0 +1,25 @@
+Metadata-Version: 2.4
+Name: enterprise-rag
+Version: 0.1.0
+Summary: Add your description here
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+Requires-Dist: chromadb>=1.5.4
+Requires-Dist: fastapi>=0.135.1
+Requires-Dist: html2text>=2025.4.15
+Requires-Dist: langchain-chroma>=1.1.0
+Requires-Dist: langchain-community>=0.4.1
+Requires-Dist: langchain-google-genai>=4.2.1
+Requires-Dist: langchain-text-splitters>=1.1.1
+Requires-Dist: langgraph>=1.1.0
+Requires-Dist: python-magic>=0.4.27
+Requires-Dist: streamlit>=1.55.0
+Requires-Dist: unstructured[md,pdf]>=0.21.5
+Requires-Dist: uvicorn>=0.41.0
+Requires-Dist: watchdog>=6.0.0
+
+## Motivation
+
+These days, we can always see chatbot on the bottom right corner of service based website. However, the utility of these chatbot are really poor. Most of them are only providing some option for customers to click or communicating with customer depends on these fixed option. Customers usually can't find out the solution of their problems and need to ask for human support as a result. I plan to make a more powerful chatbot which can better understand customers' questions and providing more accurate answers.
+
+<!-- ## How to run this project? -->

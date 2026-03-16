@@ -1,5 +1,221 @@
+# Enterprise RAG System
+
+An end-to-end Retrieval-Augmented Generation (RAG) system built with Python.  
+This project implements a modular pipeline for document ingestion, semantic search, and LLM-powered question answering.
+
+The system allows users to index documents, perform vector-based retrieval, and generate answers grounded in the retrieved context.
+
+---
+
 ## Motivation
 
-These days, we can always see chatbot on the bottom right corner of service based website. However, the utility of these chatbot are really poor. Most of them are only providing some option for customers to click or communicating with customer depends on these fixed option. Customers usually can't find out the solution of their problems and need to ask for human support as a result. I plan to make a more powerful chatbot which can better understand customers' questions and providing more accurate answers.
+Many service-based websites today include a chatbot in the bottom-right corner of the page. However, the usefulness of these chatbots is often limited. Most of them only provide predefined options for users to click through, rather than truly understanding user questions.
 
-## How to run this project?
+As a result, customers frequently fail to find the information they need and eventually have to contact human support.
+
+This project aims to build a more intelligent chatbot system powered by Retrieval-Augmented Generation (RAG). Instead of relying on fixed options, the system retrieves relevant information from a knowledge base and uses a large language model to generate accurate and context-aware responses.
+
+---
+
+# Features
+
+- Modular Retrieval-Augmented Generation (RAG) pipeline
+- Document ingestion and chunking pipeline
+- Vector similarity search with ChromaDB
+- Google Gemini LLM integration
+- Source attribution for generated answers
+- Chunk-level deduplication using content hashing
+- Retrieval abstraction layer for vector database decoupling
+- Interactive demo interface using Streamlit
+- Evaluation modules for retrieval and answer quality
+
+---
+
+# Architecture
+
+The system consists of two main pipelines.
+
+### Document Ingestion Pipeline
+
+Documents are processed and stored in a vector database.
+```
+Document Loader
+↓
+Text Chunking
+↓
+Embedding Generation
+↓
+Vector Storage (ChromaDB)
+```
+
+### Query Pipeline
+
+User questions are answered using retrieved document context.
+```
+User Query
+↓
+Retriever (Vector Search)
+↓
+Prompt Builder
+↓
+LLM (Gemini)
+↓
+Answer + Sources
+```
+
+
+---
+
+# Project Structure
+```
+.
+├── api
+│   └── app.py
+├── apps
+│   └── streamlit_app.py
+├── pyproject.toml
+├── README.md
+├── scripts
+│   ├── crawl_docs.sh
+│   ├── inspect_db.py
+│   ├── response.json
+│   ├── run_streamlit.sh
+│   └── solve_package_unfound.py
+├── send_to_gpt.txt
+├── src
+│   ├── enterprise_rag.egg-info
+│   │   ├── dependency_links.txt
+│   │   ├── PKG-INFO
+│   │   ├── requires.txt
+│   │   ├── SOURCES.txt
+│   │   └── top_level.txt
+│   └── rag_project
+│       ├── config.py
+│       ├── evaluation
+│       │   ├── answer_eval.py
+│       │   └── retrieval_eval.py
+│       ├── ingestion
+│       │   ├── chunker.py
+│       │   ├── document_loader.py
+│       │   ├── embedder.py
+│       │   ├── indexer.py
+│       │   └── vector_store.py
+│       ├── llm
+│       │   └── llm_client.py
+│       ├── main.py
+│       ├── rag
+│       │   ├── pipeline.py
+│       │   └── prompt_builder.py
+│       ├── retrieval
+│       │   ├── hybrid_search.py
+│       │   ├── reranker.py
+│       │   └── retriever.py
+│       ├── schemas
+│       │   ├── answer.py
+│       │   ├── chunk.py
+│       │   ├── query.py
+│       │   └── retrieved_chunk.py
+│       └── utils
+│           └── logging.py
+├── tests
+└── uv.lock
+
+15 directories, 36 files
+```
+
+
+Additional components:
+
+apps/
+streamlit demo UI
+
+scripts/
+document indexing and utilities
+
+tests/
+unit tests
+
+
+---
+
+# Installation
+
+Clone the repository:
+
+```
+bash
+git clone https://github.com/yourname/enterprise-rag-system.git
+cd enterprise-rag-system
+```
+Install dependencies:
+```
+uv pip install -e .
+```
+
+# Index Documents
+
+Run the ingestion pipeline to build the vector database.
+```
+uv run scripts/prepare_db.py
+```
+
+# Run CLI Query
+
+You can query the system directly from the command line. (only streamlit available for now)
+```
+# example usage: 
+# uv run -m rag_project.main "What happens at the Mad Hatter's tea party?" 
+
+uv run -m rag_project.main <query>
+```
+
+# Run Streamlit Demo
+
+Launch the interactive demo UI.
+```
+uv run streamlit run apps/streamlit_app.py 
+```
+
+The UI allows users to:
+- Ask questions
+- View generated answers
+- Inspect retrieved document sources
+
+# Example
+
+Query:
+```
+What happens at the Mad Hatter's tea party?
+```
+
+Answer:
+```
+Alice encounters the Mad Hatter, the March Hare, and the Dormouse at a tea party
+where time is permanently stuck at six o'clock, causing them to remain in a
+continuous tea-time.
+```
+Sources:
+```
+alice.txt (chunk 121)
+alice.txt (chunk 130)
+```
+
+# Tech Stack
+
+Python
+
+ChromaDB (vector database)
+
+Google Gemini API
+
+LangChain components
+
+Streamlit
+
+# Future Improvements
+
+- Reranking for improved retrieval quality
+- Hybrid search (keyword + vector search)
+- Support for additional document formats
+- API service using FastAPI
+- Improved evaluation pipeline
