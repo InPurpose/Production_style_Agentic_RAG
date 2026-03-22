@@ -143,9 +143,9 @@ unit tests
 Clone the repository:
 
 ```
-bash
 git clone https://github.com/yourname/enterprise-rag-system.git
 cd enterprise-rag-system
+uv sync
 ```
 Install dependencies:
 ```

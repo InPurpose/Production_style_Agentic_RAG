@@ -1,6 +1,6 @@
 import chromadb
 from collections import Counter
-from app.prepare_db.vector_store import PERSIST_DIRECTORY   # 你的配置路径
+from rag_project.ingestion.vector_store import PERSIST_DIRECTORY 
 
 
 COLLECTION_NAME = "docs"

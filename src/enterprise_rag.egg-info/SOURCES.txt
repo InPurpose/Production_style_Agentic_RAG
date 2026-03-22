@@ -6,8 +6,8 @@ src/enterprise_rag.egg-info/dependency_links.txt
 src/enterprise_rag.egg-info/requires.txt
 src/enterprise_rag.egg-info/top_level.txt
 src/rag_project/__init__.py
-src/rag_project/config.py
 src/rag_project/main.py
+src/rag_project/config/logging_config.py
 src/rag_project/evaluation/__init__.py
 src/rag_project/evaluation/answer_eval.py
 src/rag_project/evaluation/retrieval_eval.py
@@ -33,3 +33,4 @@ src/rag_project/schemas/query.py
 src/rag_project/schemas/retrieved_chunk.py
 src/rag_project/utils/__init__.py
 src/rag_project/utils/logging.py
+tests/test_embedder.py

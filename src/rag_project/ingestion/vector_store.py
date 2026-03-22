@@ -1,4 +1,3 @@
-# app.retrieval.vector_store.py
 
 from langchain_core.documents import Document
 # from langchain_chroma import Chroma
@@ -12,7 +11,7 @@ class BaseVectorStore:
     def add_documents(self, chunks:list[DocumentChunk],vectors: list[list[float]]):
         raise NotImplementedError
 
-    def similarity_search(self, embedded_query:list[list[float]], top_k: int = 5):
+    def similarity_search(self, embedded_query:list[float], top_k: int = 5):
         raise NotImplementedError
     
     # def get_vector_store(self):
@@ -32,15 +31,37 @@ class ChromaVectorStore(BaseVectorStore):
         self.collection = self.client.get_or_create_collection(collection_name)
 
     def add_documents(self, chunks:list[DocumentChunk],vectors: list[list[float]]):
-        # collection = self.client.get_or_create_collection("docs")
-        self.collection.add(
-            ids=[c.id for c in chunks],
-            documents=[c.text for c in chunks],
-            metadatas=[c.metadata for c in chunks],
-            embeddings=vectors
-        )
+        print(f"Original chunks: {len(chunks)}")
 
-        # print("Collection count:", self.collection.count())
+        existing_ids = set(self.collection.get()["ids"])
+        seen_ids = set()
+
+        new_chunks = []
+        new_vectors = []
+
+        for chunk, vector in zip(chunks, vectors):
+
+            # 🔥 1. 跳过 DB 已存在           🔥 2. 跳过当前 batch 重复
+            if chunk.id in existing_ids or chunk.id in seen_ids:
+                continue
+
+            seen_ids.add(chunk.id)
+            new_chunks.append(chunk)
+            new_vectors.append(vector)
+
+        print(f"After dedupe: {len(new_chunks)}")
+
+        if not new_chunks:
+            print("No new chunks to add.")
+            return
+
+        self.collection.add(
+            ids=[c.id for c in new_chunks],
+            documents=[c.text for c in new_chunks],
+            metadatas=[c.metadata for c in new_chunks],
+            embeddings=new_vectors
+        )
+        
 
     def similarity_search(self, embedded_query:list[float], top_k: int = 5):
         results = self.collection.query(

@@ -13,8 +13,14 @@ class BaseLoader:
     
 
 class PDFLoader(BaseLoader):
+
+    def __init__(self,path:str= "data/"):
+        self.path = path
     
-    def load(self, path= "docs-corpus/aws/"):
+    def load(self, path= None):
+        if not path:
+            path = self.path
+
         pdf_loader = DirectoryLoader(
         path,
         glob="**/*.pdf",
@@ -28,17 +34,24 @@ class PDFLoader(BaseLoader):
         )
 
         docs = pdf_loader.load()
-        print(f"Loaded {len(docs)} docs")
-        for doc in docs[:2]:
-            print(doc.metadata)
+        # print(f"Loaded {len(docs)} docs")
+        # for doc in docs[:2]:
+        #     print(doc.metadata)
         return docs
     
-class TextLoader(BaseLoader):
+class TextFileLoader(BaseLoader):
 
-    def __init__(self,path:str= "docs-corpus/books/"):
-        self.document_loader = DirectoryLoader(
+    def __init__(self,path:str= "data/"):
+        self.path = path
+    
+    def load(self, path= None):
+        if not path:
+            path = self.path
+
+        loader = DirectoryLoader(
         path,
         glob="**/*.txt",
+        loader_cls=TextLoader,
         loader_kwargs={"encoding":"utf-8"},
         recursive=True,
         silent_errors=True,
@@ -46,10 +59,9 @@ class TextLoader(BaseLoader):
         use_multithreading=True,
         max_concurrency=4  # 降低避免资源争用
         )
-    
-    def load(self, path= "docs-corpus/books/"):
-        pdf_loader = self.document_loader
-        docs = pdf_loader.load()
+
+
+        docs = loader.load()
         print(f"Loaded {len(docs)} docs")
         print()
         # print(type(docs[0]))
@@ -58,12 +70,19 @@ class TextLoader(BaseLoader):
         return docs
     
 class MarkDownLoader(BaseLoader):
+
+    def __init__(self,path:str= "data/"):
+        self.path = path
     
-    def load(self, path= "docs-corpus/rust_md/"):
-        pdf_loader = DirectoryLoader(
+    def load(self, path= None):
+        if not path:
+            path = self.path
+
+        md_loader = DirectoryLoader(
         path,
         glob="**/*.md",
-        loader_kwargs={},
+        loader_cls=TextLoader,
+        loader_kwargs={"encoding": "utf-8"},
         recursive=True,
         silent_errors=True,
         show_progress=True,
@@ -71,23 +90,66 @@ class MarkDownLoader(BaseLoader):
         max_concurrency=4  # 降低避免资源争用
         )
 
-        docs = pdf_loader.load()
+        docs = md_loader.load()
         print(f"Loaded {len(docs)} docs")
         for doc in docs[:2]:
             print(doc.metadata)
         return docs
-    
 
+
+from langchain_community.document_loaders import DirectoryLoader, TextLoader as LCTextLoader
+from langchain_community.document_loaders import PyPDFLoader, UnstructuredMarkdownLoader
+
+class UnifiedLoader(BaseLoader):
+
+    def __init__(self, path: str = 'data/'):
+        self.path = path
+
+    def load(self) -> list[Document]:
+
+        all_docs = []
+
+        loaders = [
+            ("**/*.txt", TextLoader),
+            ("**/*.pdf", PyPDFLoader),
+            ("**/*.md", TextLoader),
+        ]
+
+        clean_docs = []
+        for glob, loader_cls in loaders:
+
+            loader = DirectoryLoader(
+                self.path,
+                glob=glob,
+                loader_cls=loader_cls,
+                recursive=True,
+                silent_errors=True,
+                show_progress=True,
+            )
+
+            docs = loader.load()
+
+            for doc in docs:
+
+                if doc is None:
+                    continue
+
+                if not doc.page_content or not doc.page_content.strip():
+                    continue
+
+                clean_docs.append(doc)
+
+            all_docs.extend(clean_docs)
+            # all_docs.extend(docs)
+
+        print(f"Loaded {len(all_docs)} docs")
+
+        return all_docs
             
 def main():
-    d = PDFLoader()
+    d = UnifiedLoader()
     d.load()
 
-    a = TextLoader()
-    a.load()
-
-    b = MarkDownLoader()
-    b.load()
 
 
 if __name__ == '__main__':
