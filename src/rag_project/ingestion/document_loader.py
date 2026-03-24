@@ -1,11 +1,13 @@
 # app.ingestion.document_loader.py
 
-
-from pathlib import Path
+# from pathlib import Path
 from langchain_community.document_loaders import (
-        TextLoader, DirectoryLoader, UnstructuredHTMLLoader,PDFMinerLoader
+        TextLoader, DirectoryLoader, PDFMinerLoader, PyPDFLoader # UnstructuredHTMLLoader , UnstructuredMarkdownLoader
 )
+
+# from langchain_community.document_loaders import pdf
 from langchain_core.documents import Document
+from langchain_community.document_loaders import UnstructuredPDFLoader
 
 class BaseLoader:
     def load(self, path: str):
@@ -24,7 +26,7 @@ class PDFLoader(BaseLoader):
         pdf_loader = DirectoryLoader(
         path,
         glob="**/*.pdf",
-        loader_cls=PDFMinerLoader,
+        loader_cls=UnstructuredPDFLoader,
         loader_kwargs={},
         recursive=True,
         silent_errors=True,
@@ -97,16 +99,17 @@ class MarkDownLoader(BaseLoader):
         return docs
 
 
-from langchain_community.document_loaders import DirectoryLoader, TextLoader as LCTextLoader
-from langchain_community.document_loaders import PyPDFLoader, UnstructuredMarkdownLoader
+
 
 class UnifiedLoader(BaseLoader):
 
     def __init__(self, path: str = 'data/'):
         self.path = path
 
-    def load(self) -> list[Document]:
-
+    def load(self, path=None) -> list[Document]:
+        if not path:
+            path = self.path
+            
         all_docs = []
 
         loaders = [
@@ -119,7 +122,7 @@ class UnifiedLoader(BaseLoader):
         for glob, loader_cls in loaders:
 
             loader = DirectoryLoader(
-                self.path,
+                path,
                 glob=glob,
                 loader_cls=loader_cls,
                 recursive=True,

@@ -26,3 +26,5 @@ send_to_gpt.txt
 # data
 docs-corpus/*
 data/*
+
+chroma_db/*

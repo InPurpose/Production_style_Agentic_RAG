@@ -1,11 +1,13 @@
 # app.ingestion.indexer.py
 
+import shutil
+import os
 from langchain_core.documents import Document
 
-from rag_project.ingestion.chunker import *
-from rag_project.ingestion.document_loader import *
-from rag_project.ingestion.embedder import *
-from rag_project.ingestion.vector_store import *
+from rag_project.ingestion.chunker import BaseChunker,FixedSizeChunker
+from rag_project.ingestion.document_loader import TextFileLoader
+from rag_project.ingestion.embedder import BaseEmbedder,GeminiEmbedder
+from rag_project.ingestion.vector_store import BaseVectorStore, ChromaVectorStore, PERSIST_DIRECTORY
 
 
 class DocumentIndexer:

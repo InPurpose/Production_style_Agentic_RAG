@@ -20,11 +20,17 @@ vector_store = ChromaVectorStore()
 
 index = DocumentIndexer(chunker, embedder, vector_store)
 
-txt_loader = TextFileLoader("data/")
-txt_file = txt_loader.load()
 
-pdf_loader = PDFLoader("data/")
-pdf_file = pdf_loader.load()
 
-index.index_documents(txt_file)
-index.index_documents(pdf_file)
+# txt_loader = TextFileLoader("data/")
+# txt_file = txt_loader.load()
+
+# pdf_loader = PDFLoader("data/")
+# pdf_file = pdf_loader.load()
+
+# index.index_documents(txt_file)
+# index.index_documents(pdf_file)
+
+loader = UnifiedLoader()
+documents = loader.load()
+index.index_documents(documents)

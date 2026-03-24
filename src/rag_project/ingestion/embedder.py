@@ -5,7 +5,7 @@ import random
 import time
 
 import os
-import shutil
+# import shutil
 # from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from rag_project.schemas import DocumentChunk
 
@@ -49,8 +49,8 @@ class GeminiEmbedder(BaseEmbedder):
             vectors = self.embed_with_retry(batch)
 
             results.extend(vectors)
-            if i%10 == 0:
-                print(f"Batched {batch*(+1)}/{len(texts)}")
+            if i%100 == 0:
+                print(f"Batched {(i+1)}/{len(texts)}")
 
             # 🔥 避免打爆 API
             # time.sleep(1)

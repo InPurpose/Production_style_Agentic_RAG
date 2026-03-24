@@ -1,10 +1,10 @@
 
-from langchain_core.documents import Document
+# from langchain_core.documents import Document
 # from langchain_chroma import Chroma
 import chromadb
 
 from rag_project.schemas import DocumentChunk
-from rag_project.ingestion.embedder import *
+# from rag_project.ingestion.embedder import *
 
 class BaseVectorStore:
 
@@ -54,13 +54,31 @@ class ChromaVectorStore(BaseVectorStore):
         if not new_chunks:
             print("No new chunks to add.")
             return
-
-        self.collection.add(
-            ids=[c.id for c in new_chunks],
-            documents=[c.text for c in new_chunks],
-            metadatas=[c.metadata for c in new_chunks],
-            embeddings=new_vectors
-        )
+        
+        total = len(new_chunks)
+        print(f"Adding {total} chunks to vector store...")
+        batch_size = 5000
+        for i in range(0, total, batch_size):
+        
+            batch_chunks = new_chunks[i:i+batch_size]
+            batch_vectors = new_vectors[i:i+batch_size]
+    
+            print(f"Adding batch {i//batch_size + 1} ({len(batch_chunks)})")
+    
+            self.collection.add(
+                ids=[c.id for c in batch_chunks],
+                documents=[c.text for c in batch_chunks],
+                metadatas=[c.metadata for c in batch_chunks],
+                embeddings=batch_vectors
+            )
+        
+        
+        # self.collection.add(
+        #     ids=[c.id for c in new_chunks],
+        #     documents=[c.text for c in new_chunks],
+        #     metadatas=[c.metadata for c in new_chunks],
+        #     embeddings=new_vectors
+        # )
         
 
     def similarity_search(self, embedded_query:list[float], top_k: int = 5):
