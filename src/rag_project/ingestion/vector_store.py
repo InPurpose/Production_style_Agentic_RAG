@@ -18,7 +18,7 @@ class BaseVectorStore:
     # def get_vector_store(self):
     #     raise NotImplementedError
 
-PERSIST_DIRECTORY = os.getenv("CHROMA_PATH", "chroma_db")
+PERSIST_DIRECTORY = os.getenv("CHROMA_PATH", "./chroma_db")
 
 
 class ChromaVectorStore(BaseVectorStore):
