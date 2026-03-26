@@ -2,6 +2,7 @@
 # from langchain_core.documents import Document
 # from langchain_chroma import Chroma
 import chromadb
+import os
 
 from rag_project.schemas import DocumentChunk
 # from rag_project.ingestion.embedder import *
@@ -17,7 +18,7 @@ class BaseVectorStore:
     # def get_vector_store(self):
     #     raise NotImplementedError
 
-PERSIST_DIRECTORY = "chroma_db"
+PERSIST_DIRECTORY = os.getenv("CHROMA_PATH", "chroma_db")
 
 
 class ChromaVectorStore(BaseVectorStore):
