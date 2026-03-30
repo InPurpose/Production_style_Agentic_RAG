@@ -107,7 +107,6 @@ def main():
     print("Multi queries:", multi_query.generate(rewritten))
     
     reranker = GeminiLLMReranker(llm)
-    # return
  
     r = Retriever(
                 embedder = embedder,

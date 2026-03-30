@@ -8,7 +8,6 @@
 **/__pycache__/
 
 test/test_create.py
-# RemindMySelf.md
 output.txt
 
 
@@ -27,4 +26,8 @@ send_to_gpt.txt
 docs-corpus/*
 data/*
 
+# git rm --cached chroma_db/chroma.sqlite3
 chroma_db/*
+
+# git rm -r --cached src/enterprise_rag.egg-info/
+src/enterprise_rag.egg-info
