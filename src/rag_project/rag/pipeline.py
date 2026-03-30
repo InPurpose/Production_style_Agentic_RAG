@@ -6,6 +6,7 @@ from rag_project.llm.llm_client import *
 
 from rag_project.rag.prompt_builder import build_prompt
 
+from rag_project.schemas import Answer
 
 class RAGPipeline:
     
@@ -15,7 +16,7 @@ class RAGPipeline:
         self.llm = llm
 
     def answer(self, query: str):
-        results = self.retriever.retrieve(query)
+        results = self.retriever.retrieve(query, history=None)
 
         # print(type(chunks))
         # print(len(chunks))

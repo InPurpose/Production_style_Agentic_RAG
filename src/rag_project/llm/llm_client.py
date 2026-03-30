@@ -1,6 +1,6 @@
 import os
 from langchain_google_genai import ChatGoogleGenerativeAI
-from rag_project.schemas import Answer
+# from rag_project.schemas import Answer
 
 
 class BaseLLM_Client():
@@ -18,7 +18,7 @@ class GeminiLLM_Client(BaseLLM_Client):
 
     def generate(self,prompt:str):
         response = self.model.invoke(prompt)
-        response_text = response.text
+        # response_text = response.text
         
         # print(response_text)
         

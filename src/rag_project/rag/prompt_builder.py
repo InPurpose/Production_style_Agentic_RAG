@@ -1,5 +1,6 @@
-from rag_project.schemas import DocumentChunk
+from rag_project.schemas import RetrievedChunk
 from langchain_core.prompts import ChatPromptTemplate
+# from rag_project.schemas.retrieved_chunk import RetrievedChunk
 
 
 
@@ -19,7 +20,7 @@ Answer the question based on the above context: {question}
 """
 
 
-def build_prompt(question:str, chunks:list[DocumentChunk]):
+def build_prompt(question:str, chunks:list[RetrievedChunk]):
     
     # _,document,metadata,_ = chunks[0]
     context_blocks = [

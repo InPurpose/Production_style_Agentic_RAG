@@ -23,10 +23,10 @@ PERSIST_DIRECTORY = os.getenv("CHROMA_PATH", "./chroma_db")
 
 class ChromaVectorStore(BaseVectorStore):
 
-    def __init__(self, path:str= PERSIST_DIRECTORY,collection_name: str ='docs'):
+    def __init__(self, path: str = PERSIST_DIRECTORY,collection_name: str ='docs'):
         # print("Persist directory:", path)
         self.client = chromadb.PersistentClient(
-            path=PERSIST_DIRECTORY
+            path=path
         )
 
         self.collection = self.client.get_or_create_collection(collection_name)
